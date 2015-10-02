@@ -555,7 +555,7 @@ def in_ns(ns_name):
 
     return nil
 
-@as_var("ns-map")
+@as_var("-ns-map")
 def ns_map(ns):
     from pixie.vm.symbol import Symbol
     affirm(isinstance(ns, Namespace) or isinstance(ns, Symbol), u"ns must be a symbol or a namespace")

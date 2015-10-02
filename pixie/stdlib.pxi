@@ -2022,6 +2022,13 @@ For more information, see http://clojure.org/special_forms#binding-forms"}
            (cons result (keep f rest))
            (keep f rest)))))))
 
+(defn ns-map
+  "Returns vars in the namespace, defaults to *ns* if no namespace is provided"
+  ([]
+   (ns-map *ns*))
+  ([ns]
+   (-ns-map ns)))
+
 (defn refer
   {:doc "Refer to the specified vars from a namespace directly.
 
@@ -2320,7 +2327,7 @@ Expands to calls to `extend-type`."
 
 (defn float
   {:doc "Converts a number to a float."
-   :since "0.1"}  
+   :since "0.1"}
   [x]
   (-float x))
 
@@ -2348,7 +2355,7 @@ Expands to calls to `extend-type`."
 
 (defn int
   {:doc "Converts a number to an integer."
-   :since "0.1"}  
+   :since "0.1"}
   [x]
   (-int x))
 
@@ -2707,3 +2714,13 @@ Calling this function on something that is not ISeqable returns a seq with that 
   (if (satisfies? IComparable x)
     (-compare x y)
     (throw [::ComparisonError (str x " does not satisfy IComparable")])))
+
+(defn ns-publics
+  "Returns the public vars in a given namespace. If no namespace is given, default
+   to the current namespace."
+  ([]
+   (ns-publics *ns*))
+  ([ns]
+   (->> (ns-map ns)
+        (remove (comp :private meta deref second))
+        (into {}))))
